@@ -14,7 +14,6 @@ public class NetworkDataTest
             ""boolFieldTrue"": true,
             ""boolFieldFalse"": false,
             ""null"": null,
-
             ""networkDataFieldEmptyArray"": [ ],
             ""networkDataFieldEmptyHash"": { },
             ""networkDataFieldEmbeddedObject"": ""{\""field\"":\""Value with \\\""escaped quotes\\\""\""}"",
@@ -23,19 +22,15 @@ public class NetworkDataTest
                 ""id"": 1,
                 ""amount"": 11,
             },
-
             ""TestObject2"": {
                 ""id"": 2,
                 ""amount"": 22,
             },
-
             ""TestObject3"": {
                 ""id"": 3,
                 ""amount"": 33,
             },
-
             },
-
         }";
 
     const string header = "someEvent";
@@ -61,23 +56,28 @@ public class NetworkDataTest
 
     #region Properties
     [Test]
+    public void Getter_Raw()
+    {
+        Assert.AreEqual(networkData.raw, jsonString);
+    }
+
+    [Test]
     public void Getter_Header()
     {
-        Assert.Equals(networkData.header, header);
+        Assert.AreEqual(networkData.header, header);
     }
 
     [Test]
     public void Getter_KeyCount()
     {
-        //TODO: Implement
-        Assert.Equals(networkData.keyCount, -1);
+        Assert.AreEqual(networkData.keyCount, 12);
     }
 
     [Test]
     public void Getter_Keys()
     {
-        //TODO: Implement
-        Assert.Equals(networkData.keys, new string[0]);
+        string[] keys = new string[] { "intField", "floatField", "stringField", "boolFieldTruePlain", "boolFieldFalsePlain", "boolFieldTrue", "boolFieldFalse", "null", "networkDataFieldEmptyArray", "networkDataFieldEmptyHash", "networkDataFieldEmbeddedObject", "networkDataField" };
+        Assert.AreEqual(networkData.keys, keys);
     }
     #endregion
 
@@ -103,7 +103,7 @@ public class NetworkDataTest
     {
         int outVar;
         Assert.IsTrue(networkData.GetInt(intField, out outVar));
-        Assert.Equals(outVar, 1);
+        Assert.AreEqual(outVar, 1);
     }
     [Test]
     public void GetInt_ReturnsFalseIfKeyDoesntExist()
@@ -154,7 +154,7 @@ public class NetworkDataTest
     {
         string outVar;
         Assert.IsTrue(networkData.GetString(stringField, out outVar));
-        Assert.Equals(outVar, "Blah");
+        Assert.AreEqual(outVar, "Blah");
     }
     [Test]
     public void GetString_ReturnsFalseIfKeyDoesntExist()
@@ -176,7 +176,7 @@ public class NetworkDataTest
     {
         bool outVar;
         Assert.IsTrue(networkData.GetBool(boolFieldTruePlain, out outVar));
-        Assert.Equals(outVar, true);
+        Assert.AreEqual(outVar, true);
     }
 
     [Test]
@@ -237,28 +237,28 @@ public class NetworkDataTest
     {
         NetworkData[] outVar;
         networkData.GetArray(networkDataFieldEmptyArray, out outVar);
-        Assert.Equals(outVar, new NetworkData[0]);
+        Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsEmptyArrayIfEmptyHashSymbols()
     {
         NetworkData[] outVar;
         networkData.GetArray(networkDataFieldEmptyHash, out outVar);
-        Assert.Equals(outVar, new NetworkData[0]);
+        Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsCorrectDataForEmbeddedObject()
     {
         NetworkData[] outVar;
         networkData.GetArray(networkDataFieldEmbeddedObject, out outVar);
-        Assert.Equals(outVar.Length, 1);
+        Assert.AreEqual(outVar.Length, 1);
     }
 
     public void GetArray_ReturnsCorrectDataForObject()
     {
         NetworkData[] outVar;
         networkData.GetArray(networkDataField, out outVar);
-        Assert.Equals(outVar.Length, 3);
+        Assert.AreEqual(outVar.Length, 3);
     }
 
     [Test]

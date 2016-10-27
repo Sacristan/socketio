@@ -1,6 +1,10 @@
 ﻿public class NetworkData
 {
     #region Properties
+    private readonly string _rawJSON;
+
+    public string raw { get { return _rawJSON; } }
+
     public string header
     {
         get
@@ -29,7 +33,6 @@
     }
     #endregion
 
-    private readonly string _rawJSON;
 
     public NetworkData(string rawJson)
     {
