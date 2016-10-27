@@ -49,6 +49,7 @@ namespace SocketIO
 			this.nsp = nsp;
 			this.id = id;
 			this.json = json;
+
 		}
 
 		public override string ToString()
