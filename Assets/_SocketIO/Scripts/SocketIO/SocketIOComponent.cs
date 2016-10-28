@@ -1,4 +1,6 @@
-﻿#region License
+﻿
+
+#region License
 /*
  * SocketIO.cs
  *

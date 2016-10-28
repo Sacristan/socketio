@@ -4,8 +4,8 @@ using NUnit.Framework;
 
 public class NetworkDataTest
 {
-    const string jsonString = @"
-        ""someEvent"", {
+    const string jsonString = @"{
+        ""someEvent"": {
             ""intField"": 1,
             ""floatField"": 2.1,
             ""stringField"": ""Blah"",
@@ -31,7 +31,7 @@ public class NetworkDataTest
                 ""amount"": 33,
             },
             },
-        }";
+        } }";
 
     const string header = "someEvent";
 

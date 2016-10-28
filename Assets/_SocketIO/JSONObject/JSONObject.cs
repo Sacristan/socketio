@@ -38,6 +38,12 @@ public class JSONObject {
 			return list.Count;
 		}
 	}
+
+    public bool Valid
+    {
+        get { return Count >= 0; }
+    }
+
 	public List<JSONObject> list;
 	public List<string> keys;
 	public string str;
