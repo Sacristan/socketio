@@ -87,8 +87,6 @@ public class NetworkData
                 ndList.Add(nd);
             }
         }
-        Debug.Log(_arrays.Count);
-        Debug.Log(ndList.Count);
         _networkDatum = ndList.ToArray();
     }
 
