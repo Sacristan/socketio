@@ -5,24 +5,36 @@ public class NetworkData
 {
     #region Properties
     private readonly string _rawJSON;
+    private readonly string[] _keys;
+    private readonly NetworkData[] _networkDatum;
 
     //TODO: readonly?
-    private Dictionary<string, object> _objects;
-    private Dictionary<string, int> _ints;
-    private Dictionary<string, float> _floats;
-    private Dictionary<string, string> _strings;
-    private Dictionary<string, NetworkData> _arrays;
+    private Dictionary<string, string> _objects = new Dictionary<string, string>(); // holds all key value data
+    private Dictionary<string, int> _ints = new Dictionary<string, int>();
+    private Dictionary<string, float> _floats = new Dictionary<string, float>();
+    private Dictionary<string, string> _strings = new Dictionary<string, string>();
+    private Dictionary<string, bool> _bools = new Dictionary<string, bool>();
+    private Dictionary<string, NetworkData> _arrays = new Dictionary<string, NetworkData>();
+
 
     public string raw { get { return _rawJSON; } }
     public string formattedRaw { get { return _rawJSON.Replace(System.Environment.NewLine, ""); } }
     public string header { get; private set; }
 
+    public NetworkData this[int index]
+    {
+        get
+        {
+            return _networkDatum[index];
+        }
+    }
+
+
     public string[] keys
     {
         get
         {
-            throw new System.NotImplementedException();
-            return new string[0];
+            return _keys;
         }
     }
 
@@ -30,7 +42,6 @@ public class NetworkData
     {
         get
         {
-            throw new System.NotImplementedException();
             return keys.Length;
         }
     }
@@ -40,6 +51,12 @@ public class NetworkData
     {
         _rawJSON = rawJson;
         Parse();
+
+        _keys = new string[_objects.Keys.Count];
+        _objects.Keys.CopyTo(_keys, 0);
+
+        _networkDatum = new NetworkData[_arrays.Keys.Count];
+        _arrays.Values.CopyTo(_networkDatum, 0);
     }
 
     public override string ToString()
@@ -86,6 +103,7 @@ public class NetworkData
         return false;
     }
 
+    //TODO remove brackets
     public bool GetArray(string key, out NetworkData[] refVar)
     {
         throw new System.NotImplementedException();
@@ -97,44 +115,41 @@ public class NetworkData
     private void Parse()
     {
         _objects = JSONDictionaryParser.ParseJSON(formattedRaw);
-        Debug.Log(_objects.Keys.ToString());
 
-        foreach(KeyValuePair<string,object> x in _objects)
+        foreach(KeyValuePair<string,string> x in _objects)
         {
             string key = x.Key;
-            object valueObj = x.Value;
-            string valueStr = valueObj.ToString();
+            string valueStr = x.Value;
 
-            Debug.Log(string.Format("Key: {0} Value: {1}", key, valueStr));
-
-            DataType dataType = DataTypeDeterminator.DetermineDataType(x.Value);
-
-            Debug.Log("Received Data type: "+dataType);
+            DataType dataType = DataTypeDeterminator.DetermineDataType(valueStr);
 
             switch (dataType)
             {
                 case DataType.INT:
+                    _ints.Add(key, int.Parse(valueStr));
                     break;
                 case DataType.FLOAT:
+                    _floats.Add(key, float.Parse(valueStr));
                     break;
                 case DataType.STRING:
+                    _strings.Add(key, valueStr);
                     break;
                 case DataType.BOOL:
+                    _bools.Add(key, bool.Parse(valueStr));
                     break;
                 case DataType.OBJECT:
-                    //NetworkData networkData = new NetworkData(valueStr);
-                    //_arrays.Add(key, networkData);
+                    NetworkData networkData = new NetworkData(valueStr);
+                    _arrays.Add(key, networkData);
                     break;
                 default:
-                    HandleParseException();
+                    HandleParseException(valueStr);
                     break;
             }
-
         }
     }
 
-    private void HandleParseException()
+    private void HandleParseException(string msg)
     {
-        Debug.Log("Something went wrong when parsing data: "+ formattedRaw);
+        Debug.LogWarning("Something cheesy is going on: "+ msg);
     }
 }

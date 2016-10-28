@@ -31,7 +31,7 @@ public class NetworkDataTest
                 ""amount"": 33,
             },
             },
-        } }";
+        } ";
 
     const string header = "someEvent";
 
@@ -52,32 +52,42 @@ public class NetworkDataTest
     const string networkDataFieldEmbeddedObject = "networkDataFieldEmbeddedObject";
     const string networkDataField = "networkDataField";
 
-    NetworkData networkData = new NetworkData(jsonString);
+    NetworkData _networkData = new NetworkData(jsonString);
+
+    private NetworkData networkData
+    {
+        get { return _networkData; }
+    }
+
+    private NetworkData childNetworkData
+    {
+        get { return networkData[0]; }
+    }
 
     #region Properties
     [Test]
     public void Getter_Raw()
     {
-        Assert.AreEqual(networkData.raw, jsonString);
+        Assert.AreEqual(jsonString, networkData.raw);
     }
 
     [Test]
     public void Getter_Header()
     {
-        Assert.AreEqual(networkData.header, header);
+        Assert.AreEqual(header, networkData.header);
     }
 
     [Test]
     public void Getter_KeyCount()
     {
-        Assert.AreEqual(networkData.keyCount, 12);
+        Assert.AreEqual(12, childNetworkData.keyCount);
     }
 
     [Test]
     public void Getter_Keys()
     {
         string[] keys = new string[] { "intField", "floatField", "stringField", "boolFieldTruePlain", "boolFieldFalsePlain", "boolFieldTrue", "boolFieldFalse", "null", "networkDataFieldEmptyArray", "networkDataFieldEmptyHash", "networkDataFieldEmbeddedObject", "networkDataField" };
-        Assert.AreEqual(networkData.keys, keys);
+        Assert.AreEqual(childNetworkData.keys, keys);
     }
     #endregion
 
@@ -86,13 +96,13 @@ public class NetworkDataTest
     [Test]
     public void ExistsReturnsTrueOnExistingKey()
     {
-        Assert.IsTrue(networkData.Exists(intField));
+        Assert.IsTrue(childNetworkData.Exists(intField));
     }
 
     [Test]
     public void ExistsReturnsFalseOnNonExistingKey()
     {
-        Assert.IsTrue(networkData.Exists(nonExistingField));
+        Assert.IsFalse(childNetworkData.Exists(nonExistingField));
     }
 
     #endregion
@@ -102,27 +112,27 @@ public class NetworkDataTest
     public void GetInt_ReturnsTrueIfThereIsAKeyWithIntegerValue()
     {
         int outVar;
-        Assert.IsTrue(networkData.GetInt(intField, out outVar));
+        Assert.IsTrue(childNetworkData.GetInt(intField, out outVar));
         Assert.AreEqual(outVar, 1);
     }
     [Test]
     public void GetInt_ReturnsFalseIfKeyDoesntExist()
     {
         int outVar;
-        Assert.IsFalse(networkData.GetInt(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetInt(nonExistingField, out outVar));
     }
     [Test]
     public void GetInt_ReturnsFalseIfKeyExistsButIsntInt()
     {
         int outVar;
-        Assert.IsFalse(networkData.GetInt(floatField, out outVar));
+        Assert.IsFalse(childNetworkData.GetInt(floatField, out outVar));
     }
 
     [Test]
     public void GetInt_ReturnsFalseIfKeyExistsButIsNull()
     {
         int outVar;
-        Assert.IsFalse(networkData.GetInt(nullField, out outVar));
+        Assert.IsFalse(childNetworkData.GetInt(nullField, out outVar));
     }
     #endregion
 
@@ -131,20 +141,20 @@ public class NetworkDataTest
     public void GetFloat_ReturnsTrueIfThereIsAKeyWithFloatValue()
     {
         float outVar;
-        Assert.IsTrue(networkData.GetFloat(floatField, out outVar));
+        Assert.IsTrue(childNetworkData.GetFloat(floatField, out outVar));
         Assert.IsTrue(Mathf.Approximately(outVar, 2.1f));
     }
     [Test]
     public void GetFloat_ReturnsFalseIfKeyDoesntExist()
     {
         float outVar;
-        Assert.IsFalse(networkData.GetFloat(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetFloat(nonExistingField, out outVar));
     }
     [Test]
     public void GetFloat_ReturnsFalseIfKeyExistsButIsntInt()
     {
         float outVar;
-        Assert.IsFalse(networkData.GetFloat(intField, out outVar));
+        Assert.IsFalse(childNetworkData.GetFloat(intField, out outVar));
     }
     #endregion
 
@@ -153,20 +163,20 @@ public class NetworkDataTest
     public void GetString_ReturnsTrueIfThereIsAKeyWithFloatValue()
     {
         string outVar;
-        Assert.IsTrue(networkData.GetString(stringField, out outVar));
+        Assert.IsTrue(childNetworkData.GetString(stringField, out outVar));
         Assert.AreEqual(outVar, "Blah");
     }
     [Test]
     public void GetString_ReturnsFalseIfKeyDoesntExist()
     {
         string outVar;
-        Assert.IsFalse(networkData.GetString(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetString(nonExistingField, out outVar));
     }
     [Test]
     public void GetString_ReturnsFalseIfKeyExistsButIsntInt()
     {
         string outVar;
-        Assert.IsFalse(networkData.GetString(boolFieldTruePlain, out outVar));
+        Assert.IsFalse(childNetworkData.GetString(boolFieldTruePlain, out outVar));
     }
     #endregion
 
@@ -175,7 +185,7 @@ public class NetworkDataTest
     public void GetBool_ReturnsTrueIfThereIsAKeyWithBoolValue()
     {
         bool outVar;
-        Assert.IsTrue(networkData.GetBool(boolFieldTruePlain, out outVar));
+        Assert.IsTrue(childNetworkData.GetBool(boolFieldTruePlain, out outVar));
         Assert.AreEqual(outVar, true);
     }
 
@@ -183,7 +193,7 @@ public class NetworkDataTest
     public void GetBool_CorrectlyParsesDataIfPlainTrue()
     {
         bool outVar;
-        networkData.GetBool(boolFieldFalsePlain, out outVar);
+        childNetworkData.GetBool(boolFieldFalsePlain, out outVar);
         Assert.IsTrue(outVar);
     }
 
@@ -191,7 +201,7 @@ public class NetworkDataTest
     public void GetBool_CorrectlyParsesDataIfPlainFalse()
     {
         bool outVar;
-        networkData.GetBool(boolFieldTrue, out outVar);
+        childNetworkData.GetBool(boolFieldTrue, out outVar);
         Assert.IsFalse(outVar);
     }
 
@@ -199,14 +209,14 @@ public class NetworkDataTest
     public void GetBool_CorrectlyParsesDataIfBoolValTrue()
     {
         bool outVar;
-        networkData.GetBool(boolFieldTrue, out outVar);
+        childNetworkData.GetBool(boolFieldTrue, out outVar);
         Assert.IsTrue(outVar);
     }
 
     public void GetBool_CorrectlyParsesDataIfBoolValFalse()
     {
         bool outVar;
-        networkData.GetBool(boolFieldFalse, out outVar);
+        childNetworkData.GetBool(boolFieldFalse, out outVar);
         Assert.IsFalse(outVar);
     }
 
@@ -214,14 +224,14 @@ public class NetworkDataTest
     public void GetBool_ReturnsFalseIfKeyDoesntExist()
     {
         bool outVar;
-        Assert.IsFalse(networkData.GetBool(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetBool(nonExistingField, out outVar));
     }
 
     [Test]
     public void GetBool_ReturnsFalseIfKeyExistsButIsntInt()
     {
         bool outVar;
-        Assert.IsFalse(networkData.GetBool(intField, out outVar));
+        Assert.IsFalse(childNetworkData.GetBool(intField, out outVar));
     }
     #endregion
 
@@ -230,34 +240,34 @@ public class NetworkDataTest
     public void GetArray_ReturnsTrueIfThereIsAKeyWithIntegerValue()
     {
         NetworkData[] outVar;
-        Assert.IsTrue(networkData.GetArray(networkDataField, out outVar));
+        Assert.IsTrue(childNetworkData.GetArray(networkDataField, out outVar));
     }
 
     public void GetArray_ReturnsEmptyArrayIfEmptyArraySymbols()
     {
         NetworkData[] outVar;
-        networkData.GetArray(networkDataFieldEmptyArray, out outVar);
+        childNetworkData.GetArray(networkDataFieldEmptyArray, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsEmptyArrayIfEmptyHashSymbols()
     {
         NetworkData[] outVar;
-        networkData.GetArray(networkDataFieldEmptyHash, out outVar);
+        childNetworkData.GetArray(networkDataFieldEmptyHash, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsCorrectDataForEmbeddedObject()
     {
         NetworkData[] outVar;
-        networkData.GetArray(networkDataFieldEmbeddedObject, out outVar);
+        childNetworkData.GetArray(networkDataFieldEmbeddedObject, out outVar);
         Assert.AreEqual(outVar.Length, 1);
     }
 
     public void GetArray_ReturnsCorrectDataForObject()
     {
         NetworkData[] outVar;
-        networkData.GetArray(networkDataField, out outVar);
+        childNetworkData.GetArray(networkDataField, out outVar);
         Assert.AreEqual(outVar.Length, 3);
     }
 
@@ -265,13 +275,13 @@ public class NetworkDataTest
     public void GetArray_ReturnsFalseIfKeyDoesntExist()
     {
         NetworkData[] outVar;
-        Assert.IsFalse(networkData.GetArray(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetArray(nonExistingField, out outVar));
     }
     [Test]
     public void GetArray_ReturnsFalseIfKeyExistsButIsntInt()
     {
         NetworkData[] outVar;
-        Assert.IsFalse(networkData.GetArray(floatField, out outVar));
+        Assert.IsFalse(childNetworkData.GetArray(floatField, out outVar));
     }
     #endregion
 
