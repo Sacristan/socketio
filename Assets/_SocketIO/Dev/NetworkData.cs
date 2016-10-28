@@ -9,11 +9,11 @@ public class NetworkData
     private readonly NetworkData[] _networkDatum;
 
     private readonly Dictionary<string, string> _objects = new Dictionary<string, string>(); // holds all key value data
-    private readonly Dictionary<string, int> _ints = new Dictionary<string, int>();
-    private readonly Dictionary<string, float> _floats = new Dictionary<string, float>();
-    private readonly Dictionary<string, string> _strings = new Dictionary<string, string>();
-    private readonly Dictionary<string, bool> _bools = new Dictionary<string, bool>();
-    private readonly Dictionary<string, NetworkData> _arrays = new Dictionary<string, NetworkData>();
+    private readonly Dictionary<string, int> _ints = new Dictionary<string, int>(); // holds all ints
+    private readonly Dictionary<string, float> _floats = new Dictionary<string, float>(); // holds all floats
+    private readonly Dictionary<string, string> _strings = new Dictionary<string, string>(); // holds all strings
+    private readonly Dictionary<string, bool> _bools = new Dictionary<string, bool>(); //holds all bools
+    private readonly Dictionary<string, List<NetworkData>> _arrays = new Dictionary<string, List<NetworkData>>();  //Holds all Network data objects
 
     public string raw { get { return _rawJSON; } }
     public string formattedRaw { get { return _rawJSON.Replace(System.Environment.NewLine, ""); } }
@@ -37,6 +37,8 @@ public class NetworkData
 
         _objects = JSONDictionaryParser.ParseJSON(formattedRaw);
 
+
+        //Replace with enumerator
         foreach (KeyValuePair<string, string> x in _objects)
         {
             string key = x.Key;
@@ -60,7 +62,8 @@ public class NetworkData
                     break;
                 case DataType.OBJECT:
                     NetworkData networkData = new NetworkData(valueStr);
-                    _arrays.Add(key, networkData);
+                    if (!_arrays.ContainsKey(key)) _arrays[key] = new List<NetworkData>();
+                    _arrays[key].Add(networkData);
                     break;
                 default:
                     HandleParseException(valueStr);
@@ -71,8 +74,22 @@ public class NetworkData
         _keys = new string[_objects.Keys.Count];
         _objects.Keys.CopyTo(_keys, 0);
 
-        _networkDatum = new NetworkData[_arrays.Keys.Count];
-        _arrays.Values.CopyTo(_networkDatum, 0);
+        List<NetworkData> ndList = new List<NetworkData>();
+
+        Dictionary<string, List<NetworkData>>.Enumerator enumerator = _arrays.GetEnumerator();
+        while (enumerator.MoveNext())
+        {
+            KeyValuePair<string, List<NetworkData>> x  = enumerator.Current;
+
+            for(int idx=0; idx < x.Value.Count; idx++)
+            {
+                NetworkData nd = x.Value[idx];
+                ndList.Add(nd);
+            }
+        }
+        Debug.Log(_arrays.Count);
+        Debug.Log(ndList.Count);
+        _networkDatum = ndList.ToArray();
     }
 
     public override string ToString()
@@ -125,8 +142,9 @@ public class NetworkData
 
     public bool GetArray(string key, out NetworkData[] refVar)
     {
-        throw new System.NotImplementedException();
-        return false;
+        bool hasArray = _arrays.ContainsKey(key);
+        refVar = hasArray ? _arrays[key].ToArray() : new NetworkData[0];
+        return hasArray;
     }
 
     #endregion
