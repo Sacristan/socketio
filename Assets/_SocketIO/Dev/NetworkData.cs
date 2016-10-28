@@ -29,22 +29,8 @@ public class NetworkData
         }
     }
 
-
-    public string[] keys
-    {
-        get
-        {
-            return _keys;
-        }
-    }
-
-    public int keyCount
-    {
-        get
-        {
-            return keys.Length;
-        }
-    }
+    public string[] keys { get { return _keys; } }
+    public int keyCount { get { return keys.Length; } }
     #endregion
 
     public NetworkData(string rawJson)
@@ -81,26 +67,30 @@ public class NetworkData
     #region Get By Key
     public bool GetInt(string key, out int refVar)
     {
-        throw new System.NotImplementedException();
-        return false;
+        bool hasInt = _ints.ContainsKey(key);
+        refVar = hasInt ? _ints[key] : -1;
+        return hasInt;
     }
 
     public bool GetFloat(string key, out float refVar)
     {
-        throw new System.NotImplementedException();
-        return false;
+        bool hasFloat = _floats.ContainsKey(key);
+        refVar = hasFloat ? _floats[key] : -1;
+        return hasFloat;
     }
 
     public bool GetBool(string key, out bool refVar)
     {
-        throw new System.NotImplementedException();
-        return false;
+        bool hasBool = _bools.ContainsKey(key);
+        refVar = hasBool ? _bools[key] : false;
+        return hasBool;
     }
 
     public bool GetString(string key, out string refVar)
     {
-        throw new System.NotImplementedException();
-        return false;
+        bool hasString = _strings.ContainsKey(key);
+        refVar = hasString ? _strings[key] : null;
+        return hasString;
     }
 
     //TODO remove brackets
