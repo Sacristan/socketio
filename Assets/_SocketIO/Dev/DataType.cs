@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-public enum DataType
+﻿public enum DataType
 {
     UNKNOWN = -1,
     INT = 0,

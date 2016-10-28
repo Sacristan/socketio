@@ -193,7 +193,7 @@ public class NetworkDataTest
     public void GetBool_CorrectlyParsesDataIfPlainTrue()
     {
         bool outVar;
-        childNetworkData.GetBool(boolFieldFalsePlain, out outVar);
+        childNetworkData.GetBool(boolFieldTruePlain, out outVar);
         Assert.IsTrue(outVar);
     }
 
@@ -201,7 +201,7 @@ public class NetworkDataTest
     public void GetBool_CorrectlyParsesDataIfPlainFalse()
     {
         bool outVar;
-        childNetworkData.GetBool(boolFieldTrue, out outVar);
+        childNetworkData.GetBool(boolFieldFalsePlain, out outVar);
         Assert.IsFalse(outVar);
     }
 
