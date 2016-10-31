@@ -36,10 +36,8 @@ public class NetworkData
     {
         _header = pHeader;
         _rawJSON = pRawJson;
-        Debug.Log(_rawJSON);
-        _objects = JSONDictionaryParser.ParseJSON(formattedRaw);
 
-        Debug.Log(_objects);
+        _objects = JSONDictionaryParser.ParseJSON(formattedRaw);
 
         Dictionary<string,string>.Enumerator objectsEnumerator = _objects.GetEnumerator();
         while (objectsEnumerator.MoveNext()) {
@@ -75,7 +73,7 @@ public class NetworkData
                     _arrays[key].Add(networkData);
                     break;
                 default:
-                    ExceptionHandler.LogWarning("Unsupported dataType: " + valueStr+" DataType: "+dataType);
+                    ExceptionHandler.LogWarning("Unsupported dataType "+ dataType+" for value "+ valueStr);
                     break;
             }
         }

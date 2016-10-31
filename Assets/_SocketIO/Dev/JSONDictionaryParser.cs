@@ -8,10 +8,7 @@ public static class JSONDictionaryParser
     public static Dictionary<string, string> ParseJSON(string json)
     {
         int end;
-
-        Dictionary<string, string> result = ParseJSON(json, 0, out end);
-        UnityEngine.Debug.Log(result);
-        return result;
+        return ParseJSON(json, 0, out end); ;
     }
     private static Dictionary<string, string> ParseJSON(string json, int start, out int end)
     {
