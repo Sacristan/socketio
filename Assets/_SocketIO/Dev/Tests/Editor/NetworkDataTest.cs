@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
+using System.Diagnostics;
 
 public class NetworkDataTest
 {
@@ -31,7 +32,7 @@ public class NetworkDataTest
                 ""amount"": 33,
             },
             },
-        } ";
+        }";
 
     const string header = "someEvent";
 
@@ -63,7 +64,7 @@ public class NetworkDataTest
     {
         get { return networkData[0]; }
     }
-
+    
     #region Properties
     [Test]
     public void Getter_Raw()

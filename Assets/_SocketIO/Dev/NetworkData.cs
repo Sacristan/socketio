@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class NetworkData
 {
     #region Properties
     private readonly string _rawJSON;
+    private readonly string _header;
     private readonly string[] _keys;
     private readonly NetworkData[] _networkDatum;
 
@@ -17,7 +18,7 @@ public class NetworkData
 
     public string raw { get { return _rawJSON; } }
     public string formattedRaw { get { return _rawJSON.Replace(System.Environment.NewLine, ""); } }
-    public string header { get; private set; }
+    public string header { get { return _header; } }
 
     public NetworkData this[int index]
     {
@@ -31,18 +32,24 @@ public class NetworkData
     public int keyCount { get { return keys.Length; } }
     #endregion
 
-    public NetworkData(string rawJson)
+    public NetworkData(string pRawJson, bool root = true, string pHeader = null)
     {
-        _rawJSON = rawJson;
-
+        _header = pHeader;
+        _rawJSON = pRawJson;
+        Debug.Log(_rawJSON);
         _objects = JSONDictionaryParser.ParseJSON(formattedRaw);
 
+        Debug.Log(_objects);
 
-        //Replace with enumerator
-        foreach (KeyValuePair<string, string> x in _objects)
-        {
+        Dictionary<string,string>.Enumerator objectsEnumerator = _objects.GetEnumerator();
+        while (objectsEnumerator.MoveNext()) {
+
+            KeyValuePair<string, string> x = objectsEnumerator.Current;
+
             string key = x.Key;
             string valueStr = x.Value;
+
+            //Debug.Log(key+" / "+valueStr);
 
             DataType dataType = DataTypeDeterminator.DetermineDataType(valueStr);
 
@@ -61,12 +68,14 @@ public class NetworkData
                     _bools.Add(key, bool.Parse(valueStr));
                     break;
                 case DataType.OBJECT:
-                    NetworkData networkData = new NetworkData(valueStr);
+                    if (root) _header = x.Key;
+                    string head = root ? header : null;
+                    NetworkData networkData = new NetworkData(valueStr, false, head);
                     if (!_arrays.ContainsKey(key)) _arrays[key] = new List<NetworkData>();
                     _arrays[key].Add(networkData);
                     break;
                 default:
-                    HandleParseException(valueStr);
+                    ExceptionHandler.LogWarning("Unsupported dataType: " + valueStr+" DataType: "+dataType);
                     break;
             }
         }
@@ -76,10 +85,10 @@ public class NetworkData
 
         List<NetworkData> ndList = new List<NetworkData>();
 
-        Dictionary<string, List<NetworkData>>.Enumerator enumerator = _arrays.GetEnumerator();
-        while (enumerator.MoveNext())
+        Dictionary<string, List<NetworkData>>.Enumerator arraysEnumerator = _arrays.GetEnumerator();
+        while (arraysEnumerator.MoveNext())
         {
-            KeyValuePair<string, List<NetworkData>> x  = enumerator.Current;
+            KeyValuePair<string, List<NetworkData>> x  = arraysEnumerator.Current;
 
             for(int idx=0; idx < x.Value.Count; idx++)
             {
@@ -146,9 +155,4 @@ public class NetworkData
     }
 
     #endregion
-
-    private void HandleParseException(string msg)
-    {
-        Debug.LogWarning("Something cheesy is going on: "+ msg);
-    }
 }

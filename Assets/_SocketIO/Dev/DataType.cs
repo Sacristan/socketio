@@ -6,7 +6,8 @@
     STRING = 2,
     BOOL = 3,
     OBJECT = 4,
-    NULL=5
+    ARRAY = 5,
+    NULL= 6
 }
 
 public static class DataTypeDeterminator
@@ -19,8 +20,10 @@ public static class DataTypeDeterminator
 
         DataType result = DataType.UNKNOWN;
 
-        if (IsObject() || IsArray())
+        if (IsObject())
             result = DataType.OBJECT;
+        else if (IsArray())
+            result = DataType.ARRAY;
         else if (IsNull())
             result = DataType.NULL;
         else if (IsInt())
