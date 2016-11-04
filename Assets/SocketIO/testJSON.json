@@ -1,0 +1,15 @@
+[
+    "someEvent",
+      {
+        "intField": [0, 1],
+        "floatField": [1, 2.1],
+        "stringField": [2, "Blah"],
+        "null": [2, null],
+        "boolFieldTruePlain": [3, "true"],
+        "boolFieldFalsePlain": [3, "false"],
+        "boolFieldTrue": [3, true],
+        "boolFieldFalse": [3, false],
+        "networkDataFieldEmptyHash": [4, {}],
+        "networkDataField": [4, {"TestObject1":[4, {"id":1,"amount":11}],"TestObject2":[4, {"id":[0,2],"amount":[0,22]}],"TestObject3":[4, {"id":[0,3],"amount":[0,33], "floatAmount":[1,33.3]}}] ]
+      }
+]
