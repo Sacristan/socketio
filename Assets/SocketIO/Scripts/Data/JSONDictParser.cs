@@ -23,6 +23,7 @@ public static class JSONDictParser
         List<object> arraylist = null;
         Regex regex = new Regex(@"\\u([0-9a-z]{4})", RegexOptions.IgnoreCase);
         int autoKey = 0;
+
         for (int i = start; i < json.Length; i++)
         {
             char c = json[i];

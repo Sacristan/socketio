@@ -59,16 +59,17 @@ public class NetworkDataUnpackingTest
 
     NetworkData _networkData = new NetworkData(jsonString);
 
+    static string[] expectedKeys = new string[] { "intField", "floatField", "stringField", "null", "boolFieldTruePlain", "boolFieldFalsePlain", "boolFieldTrue", "boolFieldFalse", "networkDataFieldEmptyHash", "networkDataField", "intArrayField", "floatArrayField", "stringArrayField", "boolArrayField" };
+    readonly int expectedKeyCount = expectedKeys.Length;
+
     private NetworkData networkData
     {
-        //get { return new NetworkData(jsonString);  }
         get { return _networkData; }
     }
 
     private NetworkData childNetworkData
     {
         get { return networkData; }
-        //get { return networkData["someEvent"][0]; }
     }
 
     #region Properties
@@ -81,7 +82,7 @@ public class NetworkDataUnpackingTest
     [Test]
     public void Getter_KeyCount()
     {
-        Assert.AreEqual(10, childNetworkData.keyCount);
+        Assert.AreEqual(expectedKeyCount, childNetworkData.keyCount);
     }
 
     [Test]
@@ -93,8 +94,7 @@ public class NetworkDataUnpackingTest
     [Test]
     public void Getter_Keys()
     {
-        string[] keys = new string[] { "intField", "floatField", "stringField", "null", "boolFieldTruePlain", "boolFieldFalsePlain", "boolFieldTrue", "boolFieldFalse", "networkDataFieldEmptyHash", "networkDataField" };
-        Assert.AreEqual(keys, childNetworkData.keys);
+        Assert.AreEqual(expectedKeys, childNetworkData.keys);
     }
     #endregion
 

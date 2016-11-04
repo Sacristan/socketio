@@ -154,7 +154,7 @@
             else if (IsList(element))
             {
                 List<object> arr = ObjToList(element);
-                Logger.Log("Should create new Array from : " + arr.ToArray());
+                Logger.LogWarning("WARNING: array at data root: " + arr.ToArray());
             }
             else if (IsDictionary(element))
             {
