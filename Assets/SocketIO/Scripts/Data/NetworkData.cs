@@ -11,7 +11,10 @@
         public const int STRING = 2;
         public const int BOOL = 3;
         public const int OBJECT = 4;
-        public const int ARRAY = 5;
+        public const int INT_ARRAY = 5;
+        public const int FLOAT_ARRAY = 6;
+        public const int STRING_ARRAY = 7;
+        public const int BOOL_ARRAY = 8;
     }
 
     public class NetworkData
@@ -21,7 +24,7 @@
         #region Cache
 
         private List<string> _keys = new List<string>(); // holds all keys
-        private List<string> _arrayKeys = new List<string>(); // holds all keys
+        private List<string> _objectKeys = new List<string>(); // holds all keys
 
         private Dictionary<string, int> _ints = new Dictionary<string, int>(); // holds all ints
         private Dictionary<string, float> _floats = new Dictionary<string, float>(); // holds all floats
@@ -30,6 +33,10 @@
 
         private Dictionary<string, List<NetworkData>> _objects = new Dictionary<string, List<NetworkData>>();  //Holds all Network data objects
 
+        private Dictionary<string, int[]> _intArrays = new Dictionary<string, int[]>(); // holds all int arrays
+        private Dictionary<string, float[]> _floatArrays = new Dictionary<string, float[]>(); // holds all float arrays
+        private Dictionary<string, string[]> _stringArrays = new Dictionary<string, string[]>(); // holds all float arrays
+        private Dictionary<string, bool[]> _boolArrays = new Dictionary<string, bool[]>(); // holds all float arrays
         #endregion
 
         #region Public Properties
@@ -47,7 +54,7 @@
         {
             get
             {
-                string key = _arrayKeys[idx];
+                string key = _objectKeys[idx];
                 return GetObject(key);
             }
         }
@@ -242,6 +249,18 @@
                 case NetworkDataType.OBJECT:
                     AddToObjects(key, ObjToDict(data));
                     break;
+                case NetworkDataType.INT_ARRAY:
+                    AddToIntArrays(key, new int[0]); //TODO
+                    break;
+                case NetworkDataType.FLOAT_ARRAY:
+                    AddToFloatArrays(key, new float[0]); //TODO
+                    break;
+                case NetworkDataType.STRING_ARRAY:
+                    AddToStringArrays(key, new string[0]); //TODO
+                    break;
+                case NetworkDataType.BOOL_ARRAY:
+                    AddToBoolArrays(key, new bool[0]); //TODO
+                    break;
                 default:
                     Logger.LogWarning("Received unsupported datatype " + dataType + " Data: " + dataStr);
                     break;
@@ -366,6 +385,62 @@
             return result;
         }
 
+        public bool GetIntArray(string key, out int[] refVar)
+        {
+            bool exists = _intArrays.ContainsKey(key);
+            refVar = exists ? _intArrays[key] : null;
+            return exists;
+        }
+
+        public int[] GetIntArray(string key)
+        {
+            int[] result;
+            GetIntArray(key, out result);
+            return result;
+        }
+
+        public bool GetFloatArray(string key, out float[] refVar)
+        {
+            bool exists = _floatArrays.ContainsKey(key);
+            refVar = exists ? _floatArrays[key] : null;
+            return exists;
+        }
+
+        public float[] GetFloatArray(string key)
+        {
+            float[] result;
+            GetFloatArray(key, out result);
+            return result;
+        }
+
+        public bool GetStringArray(string key, out string[] refVar)
+        {
+            bool exists = _stringArrays.ContainsKey(key);
+            refVar = exists ? _stringArrays[key] : null;
+            return exists;
+        }
+
+        public string[] GetStringArray(string key)
+        {
+            string[] result;
+            GetStringArray(key, out result);
+            return result;
+        }
+
+        public bool GetBoolArray(string key, out bool[] refVar)
+        {
+            bool exists = _boolArrays.ContainsKey(key);
+            refVar = exists ? _boolArrays[key] : null;
+            return exists;
+        }
+
+        public bool[] GetBoolArray(string key)
+        {
+            bool[] result;
+            GetBoolArray(key, out result);
+            return result;
+        }
+
         #endregion
 
         #region Public Setter interface
@@ -394,6 +469,25 @@
             return AddToObjects(key, data);
         }
 
+        public bool AddIntArray(string key, int[] data)
+        {
+            return AddToIntArrays(key, data);
+        }
+
+        public bool AddFloatArray(string key, float[] data)
+        {
+            return AddToFloatArrays(key, data);
+        }
+
+        public bool AddStringArray(string key, string[] data)
+        {
+            return AddToStringArrays(key, data);
+        }
+
+        public bool AddBoolArray(string key, bool[] data)
+        {
+            return AddToBoolArrays(key, data);
+        }
         #endregion
 
         #region Adding to collections
@@ -444,7 +538,7 @@
             bool canAdd = !_objects[key].Contains(networkData);
             if (canAdd) _objects[key].Add(networkData);
 
-            if (!_arrayKeys.Contains(key)) _arrayKeys.Add(key);
+            if (!_objectKeys.Contains(key)) _objectKeys.Add(key);
             RegisterKey(key);
 
             return canAdd;
@@ -456,6 +550,47 @@
             networkData.CreateFrom(dict);
 
             AddToObjects(key, networkData);
+        }
+
+        private bool AddToIntArrays(string key, int[] data)
+        {
+            bool canAdd = !_intArrays.ContainsKey(key);
+
+            if (canAdd) _intArrays.Add(key, data);
+            RegisterKey(key);
+
+            return canAdd;
+        }
+
+        private bool AddToFloatArrays(string key, float[] data)
+        {
+            bool canAdd = !_floatArrays.ContainsKey(key);
+
+            if (canAdd) _floatArrays.Add(key, data);
+            RegisterKey(key);
+
+            return canAdd;
+        }
+
+        private bool AddToStringArrays(string key, string[] data)
+        {
+            bool canAdd = !_stringArrays.ContainsKey(key);
+
+            if (canAdd) _stringArrays.Add(key, data);
+            RegisterKey(key);
+
+            return canAdd;
+        }
+
+
+        private bool AddToBoolArrays(string key, bool[] data)
+        {
+            bool canAdd = !_boolArrays.ContainsKey(key);
+
+            if (canAdd) _boolArrays.Add(key, data);
+            RegisterKey(key);
+
+            return canAdd;
         }
 
         private void RegisterKey(string key)
@@ -528,22 +663,6 @@
 
             stringBuilder.Append(arrStringBuilder.ToString());
 
-            //foreach (KeyValuePair<string, List<NetworkData>> _array in _arrays)
-            //{
-            //    NetworkData[] arr = _array.Value.ToArray();
-
-            //    StringBuilder arrStringBuilder = new StringBuilder();
-
-            //    for(int i=0; i < arr.Length; i++)
-            //    {
-            //        NetworkData networkData = arr[i];
-            //        arrStringBuilder.Append(networkData.ToJSONString());
-            //        arrStringBuilder.Append(',');
-            //    }
-
-            //    string str = string.Format(@"""{ 0}"":[4,{1}],", _array.Key, arrStringBuilder.ToString());
-            //    stringBuilder.Append(str);
-            //}
 
             stringBuilder.Append('}');
 

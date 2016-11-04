@@ -15,10 +15,14 @@ public class NetworkDataPackingTest
     const string floatField = "floatField";
     const string stringField = "stringField";
     const string boolField = "boolField";
-    const string arrayField = "arrayField";
+    const string objectField = "objectField";
 
-    //private string expectedJSON = @"[""event"",{""intField"":[0,1],""floatField"":[1,1.1],""stringField"":[2,""foobar"",""boolField"":[3,true],""arrayField"":[4,[""embeddedData"",{""json"":[0,1]}]]]}]";
-    private string expectedJSON = @"{""intField"":[0,1],""floatField"":[1,1.1],""stringField"":[2,""foobar""],""boolField"":[3,true],""arrayField"":[4,{""json"":[0,1],},{""json1"":[1,1.2],""json2"":[2,""turtles""],},]}";
+    const string intArrayField = "intArrayField";
+    const string floatArrayField = "floatArrayField";
+    const string stringArrayField = "stringArrayField";
+    const string boolArrayField = "boolArrayField";
+
+    private string expectedJSON = @"{""intField"":[0,1],""floatField"":[1,1.1],""stringField"":[2,""foobar""],""boolField"":[3,true],""intArrayField"":[5,[3,2,1]],""floatArrayField"":[6,[3,2,1]],""stringArrayField"":[7,[""cats"",""are"",""cute""]],""boolArrayField"":[8,[false,true]],""objectField"":[4,{""json"":[0,1],},{""json1"":[1,1.2],""json2"":[2,""turtles""],},]}";
 
     [Test]
     public void AddIntField()
@@ -60,7 +64,7 @@ public class NetworkDataPackingTest
     public void AddArrayField()
     {
         NetworkData[] d;
-        Assert.IsFalse(networkData.GetObject(arrayField, out d));
+        Assert.IsFalse(networkData.GetObject(objectField, out d));
 
         NetworkData childNetworkData1 = new NetworkData();
         childNetworkData1.AddInt("json", 1);
@@ -69,11 +73,47 @@ public class NetworkDataPackingTest
         childNetworkData2.AddFloat("json1", 1.2f);
         childNetworkData2.AddString("json2", "turtles");
 
-        networkData.AddObject(arrayField, childNetworkData1);
-        networkData.AddObject(arrayField, childNetworkData2);
-        Assert.IsTrue(networkData.GetObject(arrayField, out d));
+        networkData.AddObject(objectField, childNetworkData1);
+        networkData.AddObject(objectField, childNetworkData2);
+        Assert.IsTrue(networkData.GetObject(objectField, out d));
     }
 
+
+    [Test]
+    public void AddIntArrayField()
+    {
+        int[] d;
+        Assert.IsFalse(networkData.GetIntArray(intArrayField, out d));
+        networkData.AddIntArray(intArrayField, new int[] { 3, 2, 1 } );
+        Assert.IsTrue(networkData.GetIntArray(intArrayField, out d));
+    }
+
+    [Test]
+    public void AddFloatArrayField()
+    {
+        float[] d;
+        Assert.IsFalse(networkData.GetFloatArray(floatArrayField, out d));
+        networkData.AddFloatArray(floatArrayField, new float[] { 0f, 1.2f, 3.5f });
+        Assert.IsTrue(networkData.GetFloatArray(floatArrayField, out d));
+    }
+
+    [Test]
+    public void AddStringArrayField()
+    {
+        string[] d;
+        Assert.IsFalse(networkData.GetStringArray(stringArrayField, out d));
+        networkData.AddStringArray(stringArrayField, new string[] { "cats", "are", "cute" });
+        Assert.IsTrue(networkData.GetStringArray(stringArrayField, out d));
+    }
+
+    [Test]
+    public void AddBoolArrayField()
+    {
+        bool[] d;
+        Assert.IsFalse(networkData.GetBoolArray(boolArrayField, out d));
+        networkData.AddBoolArray(boolArrayField, new bool[] { false, true });
+        Assert.IsTrue(networkData.GetBoolArray(boolArrayField, out d));
+    }
 
     [Test]
     public void ShouldHavePackedJSONCorrectly()

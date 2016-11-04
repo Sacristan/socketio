@@ -6,7 +6,6 @@ public class NetworkDataUnpackingTest
 {
     /*
         TODO:
-        * add test embedded array test
         * Tmp removed Escaped quoute support ""networkDataFieldEmbeddedObject"": [5, ""{\""field\"":\""Value with \\\""escaped quotes\\\""\""}""],
         * TMP removed ""networkDataFieldEmptyArray"": [4, []],
     */
@@ -24,7 +23,11 @@ public class NetworkDataUnpackingTest
             ""boolFieldTrue"": [3, true],
             ""boolFieldFalse"": [3, false],
             ""networkDataFieldEmptyHash"": [4, {}],
-            ""networkDataField"": [4, {""TestObject1"":[4, {""id"":[0,1],""amount"":[0,11]}],""TestObject2"":[4, {""id"":[0,2],""amount"":[0,22]}],""TestObject3"":[4, {""id"":[0,3],""amount"":[0,33], ""floatAmount"":[1,33.3]}}] ]
+            ""networkDataField"": [4, {""TestObject1"":[4, {""id"":[0,1],""amount"":[0,11]}],""TestObject2"":[4, {""id"":[0,2],""amount"":[0,22]}],""TestObject3"":[4, {""id"":[0,3],""amount"":[0,33], ""floatAmount"":[1,33.3]}}] ],
+            ""intArrayField"": [5, [1, 2 ,3, 4, 5, 6]],
+            ""floatArrayField"": [6, [0, 1.2, 581.22]],
+            ""stringArrayField"": [7, [""i"",""like"",""turtles""]],
+            ""boolArrayField"": [8, [true, false, true]]
           }
     ]
     ";
@@ -47,6 +50,11 @@ public class NetworkDataUnpackingTest
     const string networkDataFieldEmptyHash = "networkDataFieldEmptyHash";
     const string networkDataFieldEmbeddedObject = "networkDataFieldEmbeddedObject";
     const string networkDataField = "networkDataField";
+
+    const string intArrayField = "intArrayField";
+    const string floatArrayField = "floatArrayField";
+    const string stringArrayField = "stringArrayField";
+    const string boolArrayField = "boolArrayField";
 
     NetworkData _networkData = new NetworkData(jsonString);
 
@@ -232,36 +240,36 @@ public class NetworkDataUnpackingTest
     }
     #endregion
 
-    #region GetArray
+    #region GetObject
     [Test]
-    public void GetArray_ReturnsTrueIfThereIsAKeyWithIntegerValue()
+    public void GetObject_ReturnsTrueIfThereIsAKeyWithValue()
     {
         NetworkData[] outVar;
         Assert.IsTrue(childNetworkData.GetObject(networkDataField, out outVar));
     }
 
-    public void GetArray_ReturnsEmptyArrayIfEmptyArraySymbols()
+    public void GetObject_ReturnsEmptyArrayIfEmptyArraySymbols()
     {
         NetworkData[] outVar;
         childNetworkData.GetObject(networkDataFieldEmptyArray, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
-    public void GetArray_ReturnsEmptyArrayIfEmptyHashSymbols()
+    public void GetObject_ReturnsEmptyArrayIfEmptyHashSymbols()
     {
         NetworkData[] outVar;
         childNetworkData.GetObject(networkDataFieldEmptyHash, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
-    public void GetArray_ReturnsCorrectDataForEmbeddedObject()
+    public void GetObject_ReturnsCorrectDataForEmbeddedObject()
     {
         NetworkData[] outVar;
         childNetworkData.GetObject(networkDataFieldEmbeddedObject, out outVar);
         Assert.AreEqual(outVar.Length, 1);
     }
 
-    public void GetArray_ReturnsCorrectDataForObject()
+    public void GetObject_ReturnsCorrectDataForObject()
     {
         NetworkData[] outVar;
         childNetworkData.GetObject(networkDataField, out outVar);
@@ -269,16 +277,104 @@ public class NetworkDataUnpackingTest
     }
 
     [Test]
-    public void GetArray_ReturnsFalseIfKeyDoesntExist()
+    public void GetObject_ReturnsFalseIfKeyDoesntExist()
     {
         NetworkData[] outVar;
         Assert.IsFalse(childNetworkData.GetObject(nonExistingField, out outVar));
     }
     [Test]
-    public void GetArray_ReturnsFalseIfKeyExistsButIsntInt()
+    public void GetObject_ReturnsFalseIfKeyExistsButIsntInt()
     {
         NetworkData[] outVar;
         Assert.IsFalse(childNetworkData.GetObject(floatField, out outVar));
+    }
+    #endregion
+
+    #region GetIntArray
+    [Test]
+    public void GetIntArray_ReturnsTrueIfThereIsAKeyWithValue()
+    {
+        int[] outVar;
+        Assert.IsTrue(childNetworkData.GetIntArray(intArrayField, out outVar));
+        Assert.AreEqual(outVar, 1);
+    }
+    [Test]
+    public void GetIntArray_ReturnsFalseIfKeyDoesntExist()
+    {
+        int[] outVar;
+        Assert.IsFalse(childNetworkData.GetIntArray(nonExistingField, out outVar));
+    }
+    [Test]
+    public void GetIntArray_ReturnsFalseIfKeyExistsButIsntType()
+    {
+        int[] outVar;
+        Assert.IsFalse(childNetworkData.GetIntArray(intField, out outVar));
+    }
+    #endregion
+
+    #region GetFloatArray
+    [Test]
+    public void GetFloatArray_ReturnsTrueIfThereIsAKeyWithValue()
+    {
+        float[] outVar;
+        Assert.IsTrue(childNetworkData.GetFloatArray(floatArrayField, out outVar));
+        Assert.AreEqual(outVar, 1);
+    }
+    [Test]
+    public void GetFloatArray_ReturnsFalseIfKeyDoesntExist()
+    {
+        float[] outVar;
+        Assert.IsFalse(childNetworkData.GetFloatArray(nonExistingField, out outVar));
+    }
+    [Test]
+    public void GetFloatArray_ReturnsFalseIfKeyExistsButIsntType()
+    {
+        float[] outVar;
+        Assert.IsFalse(childNetworkData.GetFloatArray(intField, out outVar));
+    }
+    #endregion
+
+    #region GetStringArray
+    [Test]
+    public void GetStringArray_ReturnsTrueIfThereIsAKeyWithValue()
+    {
+        string[] outVar;
+        Assert.IsTrue(childNetworkData.GetStringArray(stringArrayField, out outVar));
+        Assert.AreEqual(outVar, 1);
+    }
+    [Test]
+    public void GetStringArray_ReturnsFalseIfKeyDoesntExist()
+    {
+        string[] outVar;
+        Assert.IsFalse(childNetworkData.GetStringArray(nonExistingField, out outVar));
+    }
+    [Test]
+    public void GetStringArray_ReturnsFalseIfKeyExistsButIsntType()
+    {
+        string[] outVar;
+        Assert.IsFalse(childNetworkData.GetStringArray(intField, out outVar));
+    }
+    #endregion
+
+    #region GetBoolArray
+    [Test]
+    public void GetBoolArray_ReturnsTrueIfThereIsAKeyWithValue()
+    {
+        bool[] outVar;
+        Assert.IsTrue(childNetworkData.GetBoolArray(stringArrayField, out outVar));
+        Assert.AreEqual(outVar, 1);
+    }
+    [Test]
+    public void GetBoolArray_ReturnsFalseIfKeyDoesntExist()
+    {
+        bool[] outVar;
+        Assert.IsFalse(childNetworkData.GetBoolArray(nonExistingField, out outVar));
+    }
+    [Test]
+    public void GetBoolArray_ReturnsFalseIfKeyExistsButIsntType()
+    {
+        bool[] outVar;
+        Assert.IsFalse(childNetworkData.GetBoolArray(intField, out outVar));
     }
     #endregion
 
