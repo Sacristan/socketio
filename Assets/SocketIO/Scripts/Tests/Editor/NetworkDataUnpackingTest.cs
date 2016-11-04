@@ -21,14 +21,14 @@ public class NetworkDataUnpackingTest
             ""boolFieldFalsePlain"": [3, ""false""],
             ""boolFieldTrue"": [3, true],
             ""boolFieldFalse"": [3, false],
-            ""networkDataFieldEmptyHash"": [4, {}],
-            ""networkDataField"": [4, {""TestObject1"":[4, {""id"":[0,1],""amount"":[0,11]}],""TestObject2"":[4, {""id"":[0,2],""amount"":[0,22]}],""TestObject3"":[4, {""id"":[0,3],""amount"":[0,33], ""floatAmount"":[1,33.3]}}] ],
-            ""emptyArrayField1"": [5, ],
-            ""emptyArrayField2"": [5, []],
-            ""intArrayField"": [5, [1, 2 ,3, 4, 5, 6]],
-            ""floatArrayField"": [6, [0.9231, 1.2, 581.22]],
-            ""stringArrayField"": [7, [""i"",""like"",""turtles""]],
-            ""boolArrayField"": [8, [true, false, true]]
+            ""networkDataFieldEmptyHash"": [5, {}],
+            ""networkDataField"": [5, {""TestObject1"":[5, {""id"":[0,1],""amount"":[0,11]}],""TestObject2"":[5, {""id"":[0,2],""amount"":[0,22]}],""TestObject3"":[5, {""id"":[0,3],""amount"":[0,33], ""floatAmount"":[1,33.3]}}] ],
+            ""emptyArrayField1"": [6, ],
+            ""emptyArrayField2"": [7, []],
+            ""intArrayField"": [6, [1, 2 ,3, 4, 5, 6]],
+            ""floatArrayField"": [7, [0.9231, 1.2, 581.22]],
+            ""stringArrayField"": [8, [""i"",""like"",""turtles""]],
+            ""boolArrayField"": [9, [true, false, true]]
           }
     ]
     ";

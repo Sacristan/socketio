@@ -10,11 +10,13 @@
         public const int FLOAT = 1;
         public const int STRING = 2;
         public const int BOOL = 3;
-        public const int OBJECT = 4;
-        public const int INT_ARRAY = 5;
-        public const int FLOAT_ARRAY = 6;
-        public const int STRING_ARRAY = 7;
-        public const int BOOL_ARRAY = 8;
+        public const int LONG = 4; //TODO: implement
+        public const int OBJECT = 5;
+        public const int INT_ARRAY = 6;
+        public const int FLOAT_ARRAY = 7;
+        public const int STRING_ARRAY = 8;
+        public const int BOOL_ARRAY = 9;
+        public const int LONG_ARRAY = 10; //TODO: implement
     }
 
     public class NetworkData
@@ -214,7 +216,7 @@
                 }
                 else
                 {
-                    //TODO: ISSUE JSONDictParser is taking key, opening array and only reading lowest level array. No nested arr support? 
+                    //TODO: ISSUE JSONDictParser is taking key, opening array and only reading lowest level array. No nested arr support? See Received Dictionary with 22 elements!
                     Logger.LogWarning(string.Format("Received data must be have type and value. Key: {0} data: {1} dataType: {2} Count: {3} valueArr: {4}", key, value, value.GetType(), valueArr.Count, valueArr.ToArray()));
 
                     foreach (object item in valueArr)
@@ -625,25 +627,25 @@
 
             foreach (KeyValuePair<string, int> _int in _ints)
             {
-                string str = string.Format(@"""{0}"":[0,{1}],", _int.Key, _int.Value);
+                string str = string.Format(@"""{0}"":[{1},{2}],", _int.Key, NetworkDataType.INT, _int.Value);
                 jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, float> _float in _floats)
             {
-                string str = string.Format(@"""{0}"":[1,{1}],", _float.Key, _float.Value);
+                string str = string.Format(@"""{0}"":[{1},{2}],", _float.Key, NetworkDataType.FLOAT, _float.Value);
                 jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, string> _string in _strings)
             {
-                string str = string.Format(@"""{0}"":[2,""{1}""],", _string.Key, _string.Value);
+                string str = string.Format(@"""{0}"":[{1},""{2}""],", _string.Key, NetworkDataType.STRING,_string.Value);
                 jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, bool> _bool in _bools)
             {
-                string str = string.Format(@"""{0}"":[3,{1}],", _bool.Key, _bool.Value.ToString().ToLower());
+                string str = string.Format(@"""{0}"":[{1},{2}],", _bool.Key, NetworkDataType.BOOL,_bool.Value.ToString().ToLower());
                 jsonStringBuilder.Append(str);
             }
 
@@ -652,7 +654,7 @@
                 StringBuilder strBuilder = new StringBuilder();
                 int[] value = _intArray.Value;
 
-                strBuilder.Append(string.Format(@"""{0}"":[5,[", _intArray.Key));
+                strBuilder.Append(string.Format(@"""{0}"":[{1},[", _intArray.Key, NetworkDataType.INT_ARRAY));
 
                 for (int i = 0; i < value.Length; i++)
                 {
@@ -669,7 +671,7 @@
                 StringBuilder strBuilder = new StringBuilder();
                 float[] value = _floatArray.Value;
 
-                strBuilder.Append(string.Format(@"""{0}"":[6,[", _floatArray.Key));
+                strBuilder.Append(string.Format(@"""{0}"":[{1},[", _floatArray.Key, NetworkDataType.FLOAT_ARRAY));
 
                 for (int i = 0; i < value.Length; i++)
                 {
@@ -685,7 +687,7 @@
                 StringBuilder strBuilder = new StringBuilder();
                 string[] value = _stringArray.Value;
 
-                strBuilder.Append(string.Format(@"""{0}"":[7,[", _stringArray.Key));
+                strBuilder.Append(string.Format(@"""{0}"":[{1},[", _stringArray.Key, NetworkDataType.STRING_ARRAY));
 
                 for (int i = 0; i < value.Length; i++)
                 {
@@ -701,7 +703,7 @@
                 StringBuilder strBuilder = new StringBuilder();
                 bool[] value = _boolArray.Value;
 
-                strBuilder.Append(string.Format(@"""{0}"":[8,[", _boolArray.Key));
+                strBuilder.Append(string.Format(@"""{0}"":[{1},[", _boolArray.Key, NetworkDataType.BOOL_ARRAY));
 
                 for (int i = 0; i < value.Length; i++)
                 {
@@ -719,7 +721,7 @@
 
                 objectStringBuilder.Append(string.Format(@"""{0}"":", key));
 
-                objectStringBuilder.Append("[4,");
+                objectStringBuilder.Append("["+NetworkDataType.OBJECT+",");
 
                 NetworkData[] arr = _objects[key].ToArray();
 
