@@ -51,13 +51,18 @@
 
         public int networkDataCount { get { return _objects.Count; } }
 
-        //TODO: Add some safety here
         public NetworkData[] this[int idx]
         {
             get
             {
                 string key = _objectKeys[idx];
-                return GetObject(key);
+
+                if (idx < _objectKeys.Count)
+                {
+                    return GetObject(key);
+                }
+
+                return null;
             }
         }
 
@@ -382,7 +387,7 @@
         public bool GetObject(string key, out NetworkData[] refVar)
         {
             bool hasArray = _objects.ContainsKey(key);
-            refVar = hasArray ? _objects[key].ToArray() : new NetworkData[0];
+            refVar = hasArray ? _objects[key].ToArray() : null;
             return hasArray;
         }
 
