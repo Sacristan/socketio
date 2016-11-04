@@ -22,7 +22,7 @@ public class NetworkDataPackingTest
     const string stringArrayField = "stringArrayField";
     const string boolArrayField = "boolArrayField";
 
-    private string expectedJSON = @"{""intField"":[0,1],""floatField"":[1,1.1],""stringField"":[2,""foobar""],""boolField"":[3,true],""intArrayField"":[5,[3,2,1]],""floatArrayField"":[6,[3,2,1]],""stringArrayField"":[7,[""cats"",""are"",""cute""]],""boolArrayField"":[8,[false,true]],""objectField"":[4,{""json"":[0,1],},{""json1"":[1,1.2],""json2"":[2,""turtles""],},]}";
+    private string expectedJSON = @"{""intField"":[0,1],""floatField"":[1,1.1],""stringField"":[2,""foobar""],""boolField"":[3,true],""intArrayField"":[5,[3,2,1]],""floatArrayField"":[6,[0,1.2,3.5]],""stringArrayField"":[7,[""cats"",""are"",""cute""]],""boolArrayField"":[8,[false,true]],""objectField"":[4,{""json"":[0,1],},{""json1"":[1,1.2],""json2"":[2,""turtles""],},]}";
 
     [Test]
     public void AddIntField()

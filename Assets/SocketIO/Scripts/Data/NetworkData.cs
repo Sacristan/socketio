@@ -610,63 +610,129 @@
             return HashDataToJSON();
         }
 
+        //TODO: Little refactoring could help 
         private string HashDataToJSON()
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder jsonStringBuilder = new StringBuilder();
 
-            stringBuilder.Append('{');
+            jsonStringBuilder.Append('{');
 
             foreach (KeyValuePair<string, int> _int in _ints)
             {
                 string str = string.Format(@"""{0}"":[0,{1}],", _int.Key, _int.Value);
-                stringBuilder.Append(str);
+                jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, float> _float in _floats)
             {
                 string str = string.Format(@"""{0}"":[1,{1}],", _float.Key, _float.Value);
-                stringBuilder.Append(str);
+                jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, string> _string in _strings)
             {
                 string str = string.Format(@"""{0}"":[2,""{1}""],", _string.Key, _string.Value);
-                stringBuilder.Append(str);
+                jsonStringBuilder.Append(str);
             }
 
             foreach (KeyValuePair<string, bool> _bool in _bools)
             {
                 string str = string.Format(@"""{0}"":[3,{1}],", _bool.Key, _bool.Value.ToString().ToLower());
-                stringBuilder.Append(str);
+                jsonStringBuilder.Append(str);
             }
 
-            StringBuilder arrStringBuilder = new StringBuilder();
+            foreach (KeyValuePair<string, int[]> _intArray in _intArrays)
+            {
+                StringBuilder strBuilder = new StringBuilder();
+                int[] value = _intArray.Value;
 
+                strBuilder.Append(string.Format(@"""{0}"":[5,[", _intArray.Key));
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    strBuilder.Append("" + value[i]);
+                    if (i < value.Length - 1) strBuilder.Append(',');
+                }
+
+                strBuilder.Append("]],");
+                jsonStringBuilder.Append(strBuilder);
+            }
+
+            foreach (KeyValuePair<string, float[]> _floatArray in _floatArrays)
+            {
+                StringBuilder strBuilder = new StringBuilder();
+                float[] value = _floatArray.Value;
+
+                strBuilder.Append(string.Format(@"""{0}"":[6,[", _floatArray.Key));
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    strBuilder.Append("" + value[i]);
+                    if (i < value.Length - 1) strBuilder.Append(',');
+                }
+
+                strBuilder.Append("]],");
+                jsonStringBuilder.Append(strBuilder);
+            }
+            foreach (KeyValuePair<string, string[]> _stringArray in _stringArrays)
+            {
+                StringBuilder strBuilder = new StringBuilder();
+                string[] value = _stringArray.Value;
+
+                strBuilder.Append(string.Format(@"""{0}"":[7,[", _stringArray.Key));
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    strBuilder.Append(string.Format(@"""{0}""", value[i]));
+                    if (i < value.Length - 1) strBuilder.Append(',');
+                }
+
+                strBuilder.Append("]],");
+                jsonStringBuilder.Append(strBuilder);
+            }
+            foreach (KeyValuePair<string, bool[]> _boolArray in _boolArrays)
+            {
+                StringBuilder strBuilder = new StringBuilder();
+                bool[] value = _boolArray.Value;
+
+                strBuilder.Append(string.Format(@"""{0}"":[8,[", _boolArray.Key));
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    strBuilder.Append("" + value[i].ToString().ToLower());
+                    if (i < value.Length - 1) strBuilder.Append(',');
+                }
+
+                strBuilder.Append("]],");
+                jsonStringBuilder.Append(strBuilder);
+            }
+
+            StringBuilder objectStringBuilder = new StringBuilder();
             foreach (string key in _objects.Keys)
             {
 
-                arrStringBuilder.Append(string.Format(@"""{0}"":", key));
+                objectStringBuilder.Append(string.Format(@"""{0}"":", key));
 
-                arrStringBuilder.Append("[4,");
+                objectStringBuilder.Append("[4,");
 
                 NetworkData[] arr = _objects[key].ToArray();
 
                 for (int i = 0; i < arr.Length; i++)
                 {
                     NetworkData networkData = arr[i];
-                    arrStringBuilder.Append(networkData.ToJSONString());
-                    arrStringBuilder.Append(',');
+                    objectStringBuilder.Append(networkData.ToJSONString());
+                    objectStringBuilder.Append(',');
                 }
 
-                arrStringBuilder.Append(']');
+                objectStringBuilder.Append(']');
             }
 
-            stringBuilder.Append(arrStringBuilder.ToString());
+            jsonStringBuilder.Append(objectStringBuilder.ToString());
 
 
-            stringBuilder.Append('}');
+            jsonStringBuilder.Append('}');
 
-            return stringBuilder.ToString();
+            return jsonStringBuilder.ToString();
         }
 
 
