@@ -237,34 +237,34 @@ public class NetworkDataUnpackingTest
     public void GetArray_ReturnsTrueIfThereIsAKeyWithIntegerValue()
     {
         NetworkData[] outVar;
-        Assert.IsTrue(childNetworkData.GetArray(networkDataField, out outVar));
+        Assert.IsTrue(childNetworkData.GetObject(networkDataField, out outVar));
     }
 
     public void GetArray_ReturnsEmptyArrayIfEmptyArraySymbols()
     {
         NetworkData[] outVar;
-        childNetworkData.GetArray(networkDataFieldEmptyArray, out outVar);
+        childNetworkData.GetObject(networkDataFieldEmptyArray, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsEmptyArrayIfEmptyHashSymbols()
     {
         NetworkData[] outVar;
-        childNetworkData.GetArray(networkDataFieldEmptyHash, out outVar);
+        childNetworkData.GetObject(networkDataFieldEmptyHash, out outVar);
         Assert.AreEqual(outVar, new NetworkData[0]);
     }
 
     public void GetArray_ReturnsCorrectDataForEmbeddedObject()
     {
         NetworkData[] outVar;
-        childNetworkData.GetArray(networkDataFieldEmbeddedObject, out outVar);
+        childNetworkData.GetObject(networkDataFieldEmbeddedObject, out outVar);
         Assert.AreEqual(outVar.Length, 1);
     }
 
     public void GetArray_ReturnsCorrectDataForObject()
     {
         NetworkData[] outVar;
-        childNetworkData.GetArray(networkDataField, out outVar);
+        childNetworkData.GetObject(networkDataField, out outVar);
         Assert.AreEqual(outVar.Length, 3);
     }
 
@@ -272,13 +272,13 @@ public class NetworkDataUnpackingTest
     public void GetArray_ReturnsFalseIfKeyDoesntExist()
     {
         NetworkData[] outVar;
-        Assert.IsFalse(childNetworkData.GetArray(nonExistingField, out outVar));
+        Assert.IsFalse(childNetworkData.GetObject(nonExistingField, out outVar));
     }
     [Test]
     public void GetArray_ReturnsFalseIfKeyExistsButIsntInt()
     {
         NetworkData[] outVar;
-        Assert.IsFalse(childNetworkData.GetArray(floatField, out outVar));
+        Assert.IsFalse(childNetworkData.GetObject(floatField, out outVar));
     }
     #endregion
 

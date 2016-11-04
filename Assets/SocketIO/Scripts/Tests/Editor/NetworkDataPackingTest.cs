@@ -60,7 +60,7 @@ public class NetworkDataPackingTest
     public void AddArrayField()
     {
         NetworkData[] d;
-        Assert.IsFalse(networkData.GetArray(arrayField, out d));
+        Assert.IsFalse(networkData.GetObject(arrayField, out d));
 
         NetworkData childNetworkData1 = new NetworkData();
         childNetworkData1.AddInt("json", 1);
@@ -69,9 +69,9 @@ public class NetworkDataPackingTest
         childNetworkData2.AddFloat("json1", 1.2f);
         childNetworkData2.AddString("json2", "turtles");
 
-        networkData.AddArray(arrayField, childNetworkData1);
-        networkData.AddArray(arrayField, childNetworkData2);
-        Assert.IsTrue(networkData.GetArray(arrayField, out d));
+        networkData.AddObject(arrayField, childNetworkData1);
+        networkData.AddObject(arrayField, childNetworkData2);
+        Assert.IsTrue(networkData.GetObject(arrayField, out d));
     }
 
 

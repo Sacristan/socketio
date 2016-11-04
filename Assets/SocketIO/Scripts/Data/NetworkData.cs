@@ -27,7 +27,8 @@
         private Dictionary<string, float> _floats = new Dictionary<string, float>(); // holds all floats
         private Dictionary<string, string> _strings = new Dictionary<string, string>(); // holds all strings
         private Dictionary<string, bool> _bools = new Dictionary<string, bool>(); //holds all bools
-        private Dictionary<string, List<NetworkData>> _arrays = new Dictionary<string, List<NetworkData>>();  //Holds all Network data objects
+
+        private Dictionary<string, List<NetworkData>> _objects = new Dictionary<string, List<NetworkData>>();  //Holds all Network data objects
 
         #endregion
 
@@ -39,7 +40,7 @@
         public int keyCount { get { return _keys.Count; } }
         public int Count { get { return keyCount; } }
 
-        public int networkDataCount { get { return _arrays.Count; } }
+        public int networkDataCount { get { return _objects.Count; } }
 
         //TODO: Add some safety here
         public NetworkData[] this[int idx]
@@ -47,7 +48,7 @@
             get
             {
                 string key = _arrayKeys[idx];
-                return GetArray(key);
+                return GetObject(key);
             }
         }
 
@@ -55,7 +56,7 @@
         {
             get
             {
-                return GetArray(key);
+                return GetObject(key);
             }
         }
 
@@ -239,7 +240,7 @@
                     AddToBools(key, bool.Parse(dataStr));
                     break;
                 case NetworkDataType.OBJECT:
-                    AddToArrays(key, ObjToDict(data));
+                    AddToObjects(key, ObjToDict(data));
                     break;
                 default:
                     Logger.LogWarning("Received unsupported datatype " + dataType + " Data: " + dataStr);
@@ -351,17 +352,17 @@
             return result;
         }
 
-        public bool GetArray(string key, out NetworkData[] refVar)
+        public bool GetObject(string key, out NetworkData[] refVar)
         {
-            bool hasArray = _arrays.ContainsKey(key);
-            refVar = hasArray ? _arrays[key].ToArray() : new NetworkData[0];
+            bool hasArray = _objects.ContainsKey(key);
+            refVar = hasArray ? _objects[key].ToArray() : new NetworkData[0];
             return hasArray;
         }
 
-        public NetworkData[] GetArray(string key)
+        public NetworkData[] GetObject(string key)
         {
             NetworkData[] result;
-            GetArray(key, out result);
+            GetObject(key, out result);
             return result;
         }
 
@@ -388,9 +389,9 @@
             return AddToBools(key, data);
         }
 
-        public bool AddArray(string key, NetworkData data)
+        public bool AddObject(string key, NetworkData data)
         {
-            return AddToArrays(key, data);
+            return AddToObjects(key, data);
         }
 
         #endregion
@@ -436,12 +437,12 @@
             return canAdd;
         }
 
-        private bool AddToArrays(string key, NetworkData networkData)
+        private bool AddToObjects(string key, NetworkData networkData)
         {
-            if (!_arrays.ContainsKey(key)) _arrays[key] = new List<NetworkData>();
+            if (!_objects.ContainsKey(key)) _objects[key] = new List<NetworkData>();
 
-            bool canAdd = !_arrays[key].Contains(networkData);
-            if (canAdd) _arrays[key].Add(networkData);
+            bool canAdd = !_objects[key].Contains(networkData);
+            if (canAdd) _objects[key].Add(networkData);
 
             if (!_arrayKeys.Contains(key)) _arrayKeys.Add(key);
             RegisterKey(key);
@@ -449,12 +450,12 @@
             return canAdd;
         }
 
-        private void AddToArrays(string key, Dictionary<string, object> dict)
+        private void AddToObjects(string key, Dictionary<string, object> dict)
         {
             NetworkData networkData = new NetworkData();
             networkData.CreateFrom(dict);
 
-            AddToArrays(key, networkData);
+            AddToObjects(key, networkData);
         }
 
         private void RegisterKey(string key)
@@ -506,14 +507,14 @@
 
             StringBuilder arrStringBuilder = new StringBuilder();
 
-            foreach (string key in _arrays.Keys)
+            foreach (string key in _objects.Keys)
             {
 
                 arrStringBuilder.Append(string.Format(@"""{0}"":", key));
 
                 arrStringBuilder.Append("[4,");
 
-                NetworkData[] arr = _arrays[key].ToArray();
+                NetworkData[] arr = _objects[key].ToArray();
 
                 for (int i = 0; i < arr.Length; i++)
                 {
