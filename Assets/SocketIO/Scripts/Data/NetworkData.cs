@@ -183,7 +183,7 @@
 
             if (value == null)
             {
-                Logger.LogWarning(string.Format("Received null data: {0}", value));
+                Logger.LogWarning(string.Format("Received null. key: {0} data: {1}", key, value));
                 return;
             }
 
@@ -191,7 +191,6 @@
 
             if (valueArr != null)
             {
-
                 if (valueArr.Count < 1)
                 {
                     Logger.Log(string.Format("Key: {0} Data: {1}", key, valueArr.ToArray()));
@@ -215,7 +214,14 @@
                 }
                 else
                 {
-                    Logger.LogWarning(string.Format("Received data must be have type and value. Received {0} keys with data: {1}", valueArr.Count, value));
+                    //TODO: ISSUE JSONDictParser is taking key, opening array and only reading lowest level array. No nested arr support? 
+                    Logger.LogWarning(string.Format("Received data must be have type and value. Key: {0} data: {1} dataType: {2} Count: {3} valueArr: {4}", key, value, value.GetType(), valueArr.Count, valueArr.ToArray()));
+
+                    foreach (object item in valueArr)
+                    {
+                        Logger.LogWarning(item);
+                    }
+
                 }
             }
             else

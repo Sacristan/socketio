@@ -7,7 +7,6 @@ public class NetworkDataUnpackingTest
     /*
         TODO:
         * Tmp removed Escaped quoute support ""networkDataFieldEmbeddedObject"": [5, ""{\""field\"":\""Value with \\\""escaped quotes\\\""\""}""],
-        * TMP removed ""networkDataFieldEmptyArray"": [4, []],
     */
 
     const string jsonString = @"
@@ -24,8 +23,10 @@ public class NetworkDataUnpackingTest
             ""boolFieldFalse"": [3, false],
             ""networkDataFieldEmptyHash"": [4, {}],
             ""networkDataField"": [4, {""TestObject1"":[4, {""id"":[0,1],""amount"":[0,11]}],""TestObject2"":[4, {""id"":[0,2],""amount"":[0,22]}],""TestObject3"":[4, {""id"":[0,3],""amount"":[0,33], ""floatAmount"":[1,33.3]}}] ],
+            ""emptyArrayField1"": [5, ],
+            ""emptyArrayField2"": [5, []],
             ""intArrayField"": [5, [1, 2 ,3, 4, 5, 6]],
-            ""floatArrayField"": [6, [0, 1.2, 581.22]],
+            ""floatArrayField"": [6, [0.9231, 1.2, 581.22]],
             ""stringArrayField"": [7, [""i"",""like"",""turtles""]],
             ""boolArrayField"": [8, [true, false, true]]
           }
