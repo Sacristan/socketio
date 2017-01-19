@@ -20,9 +20,13 @@ public static class JSONDictParser
         int cend;
         StringBuilder sb = new StringBuilder();
         Dictionary<string, object> child = null;
-        
+
         //TODO: FIXME eachtime new [ entry - a new arraylist is created... This is total bullcrap.
+        //List<List<object> >
+
         List<object> arraylist = null;
+        uint arrayDepth = 0;
+
         Regex regex = new Regex(@"\\u([0-9a-z]{4})", RegexOptions.IgnoreCase);
         int autoKey = 0;
 
